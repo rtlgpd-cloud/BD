@@ -1,0 +1,27 @@
+
+Passo 6: Desafios Rápidos
+Tente montar os comandos abaixo por conta própria. Se travar, consulte o gabarito.
+
+Mostre apenas os clientes que moram no bairro 'Centro'.
+
+Mostre o nome do produto e o preço dos produtos que custam menos de 15 reais.
+
+Calcule o valor total gasto pelo cliente de ID número 1.
+
+<details> <summary>Ver Gabarito</summary>
+1. Clientes do Centro:
+
+sql
+SELECT nome FROM clientes WHERE bairro = 'Centro';
+2. Produtos abaixo de 15 reais:
+
+sql
+SELECT nome, preco FROM produtos WHERE preco < 15.00;
+3. Total gasto pelo cliente 1:
+
+sql
+SELECT SUM(pr.preco * i.quantidade) AS total_gasto
+FROM pedidos p
+JOIN itens_pedido i ON p.id = i.pedido_id
+JOIN produtos pr ON i.produto_id = pr.id
+WHERE p.cliente_id = 1 AND p.status = 'Entregue';
