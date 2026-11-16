@@ -1,0 +1,95 @@
+Passo 1: Visualizando os dados brutos
+Vamos começar entendendo como os dados estão guardados. Copie, cole e execute:
+
+sql
+SELECT * FROM pedidos;
+O que observar: repare que na coluna 
+cliente_id
+ aparecem apenas números (1, 2, 3...). Repare também que o pedido 3 tem o campo vazio (NULL). Isso significa que foi uma venda de balcão, sem cadastro.
+
+Passo 2: Filtrando o que importa (WHERE)
+Agora não queremos ver tudo, queremos apenas os pedidos que já foram entregues.
+
+sql
+SELECT * FROM pedidos WHERE status = 'Entregue';
+Vamos ver apenas o que foi pago no fiado e ainda está pendente.
+
+sql
+SELECT cliente_id, data_pedido, forma_pagamento 
+FROM pedidos 
+WHERE forma_pagamento = 'Fiado' AND status = 'Pendente';
+Vamos ver o cardápio de forma organizada, do mais barato para o mais caro.
+
+sql
+SELECT nome, preco FROM produtos ORDER BY preco ASC;
+Passo 3: Cruzando informações (JOIN)
+No Passo 1, vimos que a tabela de pedidos mostra apenas o 
+cliente_id
+. Precisamos descobrir o nome de quem fez o pedido. Vamos cruzar as tabelas.
+
+sql
+SELECT p.id AS numero_pedido, c.nome AS nome_cliente, p.status
+FROM pedidos p
+JOIN clientes c ON p.cliente_id = c.id;
+O que observar: Note que o pedido de balcão (aquele que estava NULL) desapareceu do resultado. O JOIN comum ignora os valores nulos. Para resolver isso e trazer todos os pedidos, usamos o LEFT JOIN.
+
+sql
+SELECT p.id AS numero_pedido, c.nome AS nome_cliente, p.status
+FROM pedidos p
+LEFT JOIN clientes c ON p.cliente_id = c.id;
+Agora vamos cruzar os pedidos com os produtos para ver o que foi comprado.
+
+sql
+SELECT p.id AS numero_pedido, pr.nome AS produto, i.quantidade
+FROM pedidos p
+JOIN itens_pedido i ON p.id = i.pedido_id
+JOIN produtos pr ON i.produto_id = pr.id;
+Passo 4: Criando resumos (GROUP BY)
+O dono da lanchonete não quer ver pedido por pedido, ele quer os totais. Vamos agrupar as informações.
+
+Quantos pedidos existem em cada status?
+
+sql
+SELECT status, COUNT(*) AS quantidade
+FROM pedidos
+GROUP BY status;
+Qual é o faturamento total separado por forma de pagamento? (Aqui somamos o preço do produto multiplicado pela quantidade).
+
+sql
+SELECT p.forma_pagamento, SUM(pr.preco * i.quantidade) AS total_arrecadado
+FROM pedidos p
+JOIN itens_pedido i ON p.id = i.pedido_id
+JOIN produtos pr ON i.produto_id = pr.id
+WHERE p.status = 'Entregue'
+GROUP BY p.forma_pagamento;
+Quais são os produtos mais vendidos?
+
+sql
+SELECT pr.nome AS produto, SUM(i.quantidade) AS total_vendido
+FROM itens_pedido i
+JOIN produtos pr ON i.produto_id = pr.id
+GROUP BY pr.nome
+ORDER BY total_vendido DESC;
+Passo 5: Modificando os dados (INSERT, UPDATE, DELETE)
+Agora vamos simular o sistema da lanchonete sendo usado em tempo real.
+
+Chegou um pedido novo. Vamos inserir no banco:
+
+sql
+INSERT INTO pedidos (cliente_id, data_pedido, forma_pagamento, status)
+VALUES (3, '2024-03-10', 'Pix', 'Entregue');
+Rode o SELECT * FROM pedidos; novamente para ver o pedido novo no final da lista.
+
+O cliente do pedido número 4 pagou o fiado. Vamos atualizar:
+
+sql
+UPDATE pedidos SET status = 'Entregue' WHERE id = 4;
+Um pedido foi cancelado por erro e precisa ser apagado do sistema. Vamos deletar apenas ele:
+
+sql
+DELETE FROM pedidos WHERE id = 6;
+Aviso Importante: O comando abaixo está sem a cláusula WHERE. Não execute ele. Apenas observe:
+
+sql
+DELETE FROM pedidos;
+Se este comando for executado, o banco inteiro é apagado e não há como voltar atrás.
