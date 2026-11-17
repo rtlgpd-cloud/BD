@@ -30,7 +30,7 @@ Selecione o arquivo lanchonete.db.
 Vá para a aba "Execute SQL" (ou "Executar SQL") para rodar os comandos.
 
 Banco de dados da aula
-Tema: Lanchonete / Delivery de bairro ("Do Zé").
+Tema: Lanchonete / Delivery.
 
 Por quê esse tema? Porque todo aluno já comprou em lanchonete, mercadinho ou pediu no iFood. É o tipo de banco que existe em milhares de empresas pequenas do país — e tem dados sujos de verdade: cliente balcão (NULL), 
 nome repetido, fiado, pedido cancelado.
@@ -49,7 +49,7 @@ Cada item aponta para um produto.
 Script completo (schema.sql)
 sql
 -- ============================================
--- BANCO: Lanchonete / Delivery "Do Zé"
+-- BANCO: Lanchonete / Delivery
 -- Dados reais, com bagunça real
 -- ============================================
 
@@ -136,7 +136,7 @@ Como criar o banco no Letos:
 
 Abra o Letos e vá em "New Database" (Novo Banco de Dados).
 
-Salve como lanchonete.db.
+Salve como lanchonete.db
 
 Vá na aba "Execute SQL" (Executar SQL).
 
