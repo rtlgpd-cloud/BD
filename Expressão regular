@@ -1,0 +1,53 @@
+Expressão regular..
+
+^        -> Começa com
+$        -> Termina com
+[0-9]    -> Qualquer número
+[a-z]    -> Qualquer letra minúscula
+{A,B}    -> De A até B repetições (ex: {2,5})
+{4}      -> Exatamente 4 repetições
+.        -> Qualquer caractere (curinga)
+
+[A-Za-z] : Qualquer letra maiúscula ou minúscula.
+
+{3} : Exatamente três ocorrências.
+
+^ e $ : Garantem que o nome tenha exatamente 3 letras e nada mais.
+
+SELECT nome 
+FROM clientes 
+WHERE nome REGEXP '^[A-Za-z]{6}$';
+
+Buscando Produtos que Começam com "X"
+Se o cardápio tiver muitos itens, podemos filtrar só os que começam com a letra X.
+
+sql
+SELECT nome, preco 
+FROM produtos 
+WHERE nome REGEXP '^X';
+Ou usar o 
+LIKE
+ para fazer a mesma coisa (mais simples, mas menos poderoso):
+
+sql
+SELECT nome, preco 
+FROM produtos 
+WHERE nome LIKE 'X%';
+
+
+
+
+Telefones com formato 2-4-4:
+
+sql
+
+SELECT nome, telefone FROM clientes WHERE telefone REGEXP  '^[0-9]{2} [0-9]{4}-[0-9]{4}$';
+
+SELECT nome, telefone 
+FROM clientes 
+WHERE telefone IS NOT NULL AND telefone NOT REGEXP '^[0-9]{2} [0-9]{4}-[0-9]{4}$';
+
+
+UPDATE clientes 
+SET telefone = SUBSTR(telefone, 1, 2) || ' ' || SUBSTR(telefone, 4, 4) || '-' || SUBSTR(telefone, 8, 4)
+WHERE id = 8;
